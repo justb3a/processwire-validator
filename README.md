@@ -27,16 +27,9 @@ $validatorConf = array(
 
 Execute validation:
 ```php
-$validator = wire('modules')->get('Validator');
-if (!$validator) throw new Wire404Exception('Validator module is not installed');
-$errors = $validator->getErrors($validatorConf); // returns array
-$isValid = $validator->isValid($validatorConf); // returns boolean
-```
-
-OR
-```php
 $validator = new Validator;
 $errors = $validator->getErrors($validatorConf);
+if (!$validator->validate($validatorConf)) {
+  $errors = $validator->getErrors();
+}
 ```
-
-

@@ -56,6 +56,9 @@ class Validator extends WireData implements Module {
     'matchField'
   );
 
+  protected $errors = array();
+  protected $isValidated = false;
+
   /**
    * construct - require validators
    */
@@ -74,26 +77,27 @@ class Validator extends WireData implements Module {
    * @param array $conf
    * @return array
    */
-  protected function validate($conf) {
-    $errors = array();
+  public function validate($conf) {
+    if (!$this->isValidated) {
+      $this->isValidated = true;
+      foreach ($conf as $ident => $validators) {
+        foreach ($validators as $validator => $options) {
+          if (!is_array($options)) {
+            $validator = $options;
+            $options = array();
+          }
 
-    foreach ($conf as $ident => $validators) {
-      foreach ($validators as $validator => $options) {
-        if (!is_array($options)) {
-          $validator = $options;
-          $options = array();
-        }
-
-        $classname = 'Kfi\Validator\\' . ucfirst($validator) . 'Validator';
-        $result = new $classname(wire('input')->post->$ident, $options);
-        if (!$result->isValid()) {
-          $errors[$ident][] = $result->getMessages();
-          if (in_array($validator, array('isEmpty', 'isEmail'))) break;
+          $classname = 'Kfi\Validator\\' . ucfirst($validator) . 'Validator';
+          $result = new $classname(wire('input')->post->$ident, $options);
+          if (!$result->isValid()) {
+            $this->errors[$ident][] = $result->getMessages();
+            if (in_array($validator, array('isEmpty', 'isEmail'))) break;
+          }
         }
       }
     }
 
-    return $errors;
+    return count($this->errors) ? false : true;
   }
 
   /**
@@ -102,20 +106,9 @@ class Validator extends WireData implements Module {
    * @param array $conf
    * @return array
    */
-  public function getErrors($conf) {
-    $errors = $this->validate($conf);
-    return $this->array_multi_merge($errors);
-  }
-
-  /**
-   * get validation result state
-   *
-   * @param array $conf
-   * @return boolean
-   */
-  public function isValid($conf) {
-    $errors = $this->validate($conf);
-    return count($errors) ? false : true;
+  public function getErrors($conf = array()) {
+    if (!$this->isValidated) $this->validate($conf);
+    return $this->array_multi_merge($this->errors);
   }
 
   /**
