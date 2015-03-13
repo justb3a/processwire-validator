@@ -43,17 +43,16 @@ class Validator extends WireData implements Module {
    * array available validators
    */
   protected static $validators = array(
-    'isEmpty',
-    'minLength',
-    'maxLength',
     'containsAtLeast',
-    'noWhitespace',
-    'isUnique',
     'isEmail',
+    'isEmpty',
     'isEqual',
     'isEqualLength',
+    'isUnique',
+    'maxLength',
+    'minLength',
+    'noWhitespace',
     'range',
-    'matchField'
   );
 
   protected $errors = array();

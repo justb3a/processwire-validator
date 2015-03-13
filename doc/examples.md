@@ -1,4 +1,5 @@
 #### Navigation
+- [Installation](installation.md)
 - [➻ Examples](examples.md)
 - [Available Validators](validators.md)
 - [Error Messages](messages.md)
@@ -6,9 +7,29 @@
 
 # Validation for ProcessWire: Examples
 
+## How to
+
+1. build configuration array         ``$validatorConf = array( ... );``
+2. get validator                     ``$validator = new Validator;``
+3. set config                        ``$validator->setConfig($validatorConf);``
+4. validate
+    - check if it's valid {boolean}  ``$validator->isValid();``
+    - get errors {array}             ``$validator->getErrors();``
+    - get error messages {array}     ``$validator->getMessages();``
+
+```php
+$validatorConf = array( ... );
+$validator = new Validator;
+$validator->setConfig($validatorConf);
+$validator->isValid();
+$validator->getErrors();
+$validator->getMessages();
+```
+
 ## Example I (form)
 
 Build configuration array:
+
 ```php
 $validatorConf = array(
   'username' => array(
@@ -30,6 +51,7 @@ $validatorConf = array(
 ```
 
 Execute validation:
+
 ```php
 $validator = new Validator;
 $validator->setConfig($validatorConf);
@@ -43,6 +65,7 @@ if (!$validator->isValid()) {
 ## Example II (REST)
 
 Example Request
+
 ```php
 $validator = new Validator;
 $validator->setConfig($validatorConf);
@@ -57,12 +80,14 @@ if (!$validator->isValid()) {
   $this->returnJson($data, 400);
 }
 ```
+
 ```json
 ❯ http -f POST http://pw.dev/v1/user/ email=info@com username=exampleUser pass=short firstname=Jane lastname=Doe
 ```
 
 
 Example Response - getMessages()
+
 ```json
 {
     "errors": {
@@ -81,6 +106,7 @@ Example Response - getMessages()
 
 
 Example Response - getErrors()
+
 ```json
 {
     "errors": {
