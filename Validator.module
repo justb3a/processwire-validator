@@ -1,0 +1,147 @@
+  <?php
+
+/**
+ * Validator
+ *
+ * Provides a set of useful validation methods
+ *
+ * ProcessWire 2.x
+ * Licensed under GNU/GPL v2, see LICENSE.TXT
+ *
+ * @author Tabea David <td@kf-interactive.com>
+ * @version 0.0.1
+ * @copyright Copyright (c) 2015 KF Interactive, www.kf-interactive.com, <info@kf-interactive.com>
+ * @see https://github.com/justonestep/processwire-validator
+ * @see http://www.processwire.com
+ *
+ */
+
+/**
+ * Class Validator
+ */
+class Validator extends WireData implements Module {
+
+  /**
+   * getModuleInfo
+   *
+   * @return array
+   */
+  public static function getModuleInfo() {
+    return array(
+      'title' => 'Validator',
+      'summary' => 'Provides a set of useful validation methods',
+      'version' => 1,
+      'author' => 'Tabea David | td@kf-interactive.com',
+      'href' => 'https://github.com/justonestep/processwire-validator',
+      'icon' => 'check-circle-o',
+      'singular' => false,
+      'autoload' => true
+    );
+  }
+
+  /**
+   * array available validators
+   */
+  protected static $validators = array(
+    'isEmpty',
+    'minLength',
+    'maxLength',
+    'containsAtLeast',
+    'noWhitespace',
+    'isUnique',
+    'isEmail',
+    'isEqual',
+    'isEqualLength',
+    'range',
+    'matchField'
+  );
+
+  /**
+   * construct - require validators
+   */
+  public function __construct() {
+    require_once(wire('config')->paths->Validator . 'lib/AbstractValidator.php');
+    require_once(wire('config')->paths->Validator . 'lib/ValidatorInterface.php');
+
+    foreach (self::$validators as $validator) {
+      require_once(wire('config')->paths->Validator . 'lib/' . $validator . 'Validator.php');
+    }
+  }
+
+  /**
+   * Execute validation
+   *
+   * @param array $conf
+   * @return array
+   */
+  protected function validate($conf) {
+    $errors = array();
+
+    foreach ($conf as $ident => $validators) {
+      foreach ($validators as $validator => $options) {
+        if (!is_array($options)) {
+          $validator = $options;
+          $options = array();
+        }
+
+        $classname = 'Kfi\Validator\\' . ucfirst($validator) . 'Validator';
+        $result = new $classname(wire('input')->post->$ident, $options);
+        if (!$result->isValid()) {
+          $errors[$ident][] = $result->getMessages();
+          if (in_array($validator, array('isEmpty', 'isEmail'))) break;
+        }
+      }
+    }
+
+    return $errors;
+  }
+
+  /**
+   * get validation errors
+   *
+   * @param array $conf
+   * @return array
+   */
+  public function getErrors($conf) {
+    $errors = $this->validate($conf);
+    return $this->array_multi_merge($errors);
+  }
+
+  /**
+   * get validation result state
+   *
+   * @param array $conf
+   * @return boolean
+   */
+  public function isValid($conf) {
+    $errors = $this->validate($conf);
+    return count($errors) ? false : true;
+  }
+
+  /**
+   * Merge a multidimensional array
+   *
+   * @param array $array
+   * @return array
+   */
+  protected function array_multi_merge($array) {
+    $result = array();
+
+    if (count($array)) {
+      foreach ($array as $key => $value) {
+
+        $new = array();
+        foreach ($value as $items) {
+          foreach ($items as $item) {
+            $new[] = $item;
+          }
+        }
+
+        $result[$key] = $new;
+      }
+    }
+
+    return $result;
+  }
+
+}
