@@ -1,4 +1,8 @@
-- [back](..)
+#### Navigation
+- [⇐ back to the overview](../..)
+- [Available Validators](../validators)
+- [Error Messages](../messages)
+
 
 # Validation for ProcessWire: Examples
 
