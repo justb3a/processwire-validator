@@ -4,6 +4,6 @@ This module provides a set of useful validation methods.
 
 # The Guides
 
-- [Examples](readme/examples)
-- [Available Validators](readme/validators)
-- [Error Messages](readme/messages)
+- [Examples](doc/examples.md)
+- [Available Validators](doc/validators.md)
+- [Error Messages](doc/messages.md)

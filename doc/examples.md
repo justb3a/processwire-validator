@@ -1,7 +1,6 @@
 #### Navigation
-- [⇐ back to the overview](../..)
-- [Available Validators](../validators)
-- [Error Messages](../messages)
+- [Available Validators](validators.md)
+- [Error Messages](messages.md)
 
 
 # Validation for ProcessWire: Examples
