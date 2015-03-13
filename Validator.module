@@ -57,7 +57,7 @@ class Validator extends WireData implements Module {
   );
 
   protected $errors = array();
-  protected $isValidated = false;
+  protected $messages = array();
 
   /**
    * construct - require validators
@@ -77,38 +77,59 @@ class Validator extends WireData implements Module {
    * @param array $conf
    * @return array
    */
-  public function validate($conf) {
-    if (!$this->isValidated) {
-      $this->isValidated = true;
-      foreach ($conf as $ident => $validators) {
-        foreach ($validators as $validator => $options) {
-          if (!is_array($options)) {
-            $validator = $options;
-            $options = array();
-          }
+  protected function validate($conf) {
+    foreach ($conf as $ident => $validators) {
+      foreach ($validators as $validator => $options) {
+        if (!is_array($options)) {
+          $validator = $options;
+          $options = array();
+        }
 
-          $classname = 'Kfi\Validator\\' . ucfirst($validator) . 'Validator';
-          $result = new $classname(wire('input')->post->$ident, $options);
-          if (!$result->isValid()) {
-            $this->errors[$ident][] = $result->getMessages();
-            if (in_array($validator, array('isEmpty', 'isEmail'))) break;
-          }
+        $classname = 'Kfi\Validator\\' . ucfirst($validator) . 'Validator';
+        $result = new $classname(wire('input')->post->$ident, $options);
+        if (!$result->isValid()) {
+          $this->errors[$ident][] = $result->getErrors();
+          $this->messages[$ident][] = $result->getMessages();
+          if (in_array($validator, array('isEmpty', 'isEmail'))) break;
         }
       }
     }
+  }
 
-    return count($this->errors) ? false : true;
+  /**
+   * set configuration array
+   */
+  public function setConfig($conf) {
+    if (is_array($conf)) {
+      $this->validate($conf);
+    }
   }
 
   /**
    * get validation errors
    *
-   * @param array $conf
    * @return array
    */
-  public function getErrors($conf = array()) {
-    if (!$this->isValidated) $this->validate($conf);
+  public function getErrors() {
     return $this->array_multi_merge($this->errors);
+  }
+
+  /**
+   * get validation messages
+   *
+   * @return array
+   */
+  public function getMessages() {
+    return $this->array_multi_merge($this->messages);
+  }
+
+  /**
+   * get validation state
+   *
+   * @return boolean
+   */
+  public function isValid() {
+    return count($this->errors) ? false : true;
   }
 
   /**
