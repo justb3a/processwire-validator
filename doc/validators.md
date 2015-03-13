@@ -6,6 +6,11 @@
 
 # Validation for ProcessWire: Validators
 
+## quick access
+
+- [general behaviour](#general-behaviour)
+- [containsAtLeast](#containsatleast)
+
 ## general behaviour
 
 - if you don't need any options
@@ -16,7 +21,7 @@
 )
 ```
 
-- if you need options
+- if you need some options
 
 ```php
 'fieldname' => array(
@@ -24,6 +29,19 @@
     'ident1' => 'value',
     'ident2' => 'value'
   )
+)
+```
+
+- if you want to overwrite messages
+
+```php
+'fieldname' => array(
+  'validatorName' => array(
+    'ident1' => 'value'
+  ),
+  'messages' => array(
+    'ident1' => 'new message, may include replacement parameters like %value% or %min%',
+    'ident2' => 'just another error message for ident2'
 )
 ```
 
