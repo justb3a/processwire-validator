@@ -1,6 +1,7 @@
 <?php
 
 namespace Kfi\Validator;
+use WireException;
 
 class IsEmptyValidator extends AbstractValidator implements ValidatorInterface {
 
@@ -11,6 +12,8 @@ class IsEmptyValidator extends AbstractValidator implements ValidatorInterface {
   );
 
   public function validate($value, $conf = array()) {
+    if (!is_array($conf)) throw new WireException('Config must be of type array but is of type ' . gettype($conf) . '.');
+
     if (empty($value)) {
       $this->setIsValid(false);
       $this->addError(self::IS_EMPTY);

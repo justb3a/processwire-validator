@@ -1,6 +1,7 @@
 <?php
 
 namespace Kfi\Validator;
+use WireException;
 
 class IsEmailValidator extends AbstractValidator implements ValidatorInterface {
 
@@ -11,6 +12,8 @@ class IsEmailValidator extends AbstractValidator implements ValidatorInterface {
   );
 
   public function validate($value, $conf = array()) {
+    if (!is_array($conf)) throw new WireException('Config must be of type array but is of type ' . gettype($conf) . '.');
+
     if (empty(wire('sanitizer')->email($value))) {
       $this->setValue($value);
       $this->setIsValid(false);

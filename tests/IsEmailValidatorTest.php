@@ -2,9 +2,21 @@
 
 namespace Kfi\Validator\Tests;
 use Kfi\Validator\IsEmailValidator;
-// include '../../../index.php'; // include processwire index.php to enable use of wire()
 
 class IsEmailValidatorTest extends \PHPUnit_Framework_TestCase {
+
+  /**
+   * @expectedException WireException
+   */
+  public function testConfigIsArrayException() {
+    try {
+      new IsEmailValidator('test@foo.com', 'noarray');
+    } catch (WireException $e) {
+      $this->assertNotEmpty($e);
+    }
+
+    $this->fail('An expected exception has not been raised: Config must be of type array.');
+  }
 
   public function testIsValid() {
     $validator = new IsEmailValidator('test@foo.com');

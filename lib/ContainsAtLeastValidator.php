@@ -1,6 +1,7 @@
 <?php
 
 namespace Kfi\Validator;
+use WireException;
 
 class ContainsAtLeastValidator extends AbstractValidator implements ValidatorInterface {
 
@@ -17,43 +18,47 @@ class ContainsAtLeastValidator extends AbstractValidator implements ValidatorInt
   );
 
   public function validate($value, $conf = array()) {
-    if (is_array($conf)) {
+    if (!is_array($conf)) throw new WireException('Config must be of type array but is of type ' . gettype($conf) . '.');
 
-      if (array_key_exists('contains', $conf)) {
-        $this->setValue($value);
-
-        foreach (explode(',' , $conf['contains']) as $type) {
-          switch(trim($type)) {
-            case 'digit':
-              if (!preg_match('/\d/', $value)) {
-                $this->setIsValid(false);
-                $this->addError(self::MUST_CONTAIN_DIGIT);
-              }
-              break;
-            case 'letter':
-              if (!preg_match('/[A-Za-z]/', $value)) {
-                $this->setIsValid(false);
-                $this->addError(self::MUST_CONTAIN_LETTER);
-              }
-              break;
-            case 'specialsign':
-              if (!preg_match('/[_\W]/', $value)) {
-                $this->setIsValid(false);
-                $this->addError(self::MUST_CONTAIN_SPECIALSIGN);
-              }
-              break;
-            case 'uppercase':
-              if (!preg_match('/[A-Z]/', $value)) {
-                $this->setIsValid(false);
-                $this->addError(self::MUST_CONTAIN_UPPERCASE);
-              }
-              break;
-          }
-        }
-      }
-
-      $this->checkOwnMessage($conf);
+    if (!array_key_exists('contains', $conf) || empty($conf['contains'])) {
+      $conf['contains'] = 'digit, letter, specialsign, uppercase';
     }
+
+    $this->setValue($value);
+
+    foreach (explode(',' , $conf['contains']) as $type) {
+      switch(trim($type)) {
+        case 'digit':
+          if (!preg_match('/\d/', $value)) {
+            $this->setIsValid(false);
+            $this->addError(self::MUST_CONTAIN_DIGIT);
+          }
+          break;
+        case 'letter':
+          if (!preg_match('/[A-Za-z]/', $value)) {
+            $this->setIsValid(false);
+            $this->addError(self::MUST_CONTAIN_LETTER);
+          }
+          break;
+        case 'specialsign':
+          if (!preg_match('/[_\W]/', $value)) {
+            $this->setIsValid(false);
+            $this->addError(self::MUST_CONTAIN_SPECIALSIGN);
+          }
+          break;
+        case 'uppercase':
+          if (!preg_match('/[A-Z]/', $value)) {
+            $this->setIsValid(false);
+            $this->addError(self::MUST_CONTAIN_UPPERCASE);
+          }
+          break;
+        default:
+          throw new WireException('Unknown param: ' . $type . '.');
+          break;
+      }
+    }
+
+  $this->checkOwnMessage($conf);
 
   }
 

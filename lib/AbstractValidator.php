@@ -1,6 +1,7 @@
 <?php
 
 namespace Kfi\Validator;
+use WireException;
 
 abstract class AbstractValidator {
   private $errors = [];
