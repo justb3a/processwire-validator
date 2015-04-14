@@ -65,8 +65,10 @@ class ContainsAtLeastValidator extends AbstractValidator implements ValidatorInt
   private function checkOwnMessage($conf) {
     if (array_key_exists('messages', $conf) && is_array($conf['messages'])) {
       foreach ($conf['messages'] as $error => $message) {
-        $error = constant('self::MUST_CONTAIN_' . strtoupper($error));
-        $this->_messageTemplates[$error] = wire('sanitizer')->text($message);
+        if (defined('self::MUST_CONTAIN_' . strtoupper($error)) && !empty($message)) {
+          $error = constant('self::MUST_CONTAIN_' . strtoupper($error));
+          $this->_messageTemplates[$error] = wire('sanitizer')->text($message);
+        }
       }
     }
   }

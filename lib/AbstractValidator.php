@@ -24,20 +24,28 @@ abstract class AbstractValidator {
     $this->value = $value;
   }
 
+  public function getValue() {
+    return $this->value;
+  }
+
   protected function setMin($min) {
     $this->min = $min;
+  }
+
+  public function getMin() {
+    return $this->min;
   }
 
   protected function setMax($max) {
     $this->max = $max;
   }
 
-  protected function setEqual($equal) {
-    $this->equal = $equal;
+  public function getMax() {
+    return $this->max;
   }
 
-  protected function setField($field) {
-    $this->field = $field;
+  protected function setEqual($equal) {
+    $this->equal = $equal;
   }
 
   protected function setIsValid($isValid) {

@@ -7,4 +7,7 @@ interface ValidatorInterface {
   public function isValid();
   public function getErrors();
   public function getMessages();
+  public function getMin();
+  public function getMax();
+  public function getValue();
 }

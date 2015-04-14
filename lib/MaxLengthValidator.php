@@ -1,6 +1,7 @@
 <?php
 
 namespace Kfi\Validator;
+use WireException;
 
 class MaxLengthValidator extends AbstractValidator implements ValidatorInterface {
 
@@ -11,8 +12,10 @@ class MaxLengthValidator extends AbstractValidator implements ValidatorInterface
   );
 
   public function validate($value, $conf = array()) {
+    if (!is_array($conf)) throw new WireException('Config must be of type array but is of type ' . gettype($conf) . '.');
+
     // get max value
-    $cond = is_array($conf) && array_key_exists('max', $conf) && is_numeric($conf['max']);
+    $cond = array_key_exists('max', $conf) && is_numeric($conf['max']);
     $max = $cond ? (int)$conf['max'] : 10;
     $this->setMax($max);
 
@@ -27,8 +30,10 @@ class MaxLengthValidator extends AbstractValidator implements ValidatorInterface
   private function checkOwnMessage($conf) {
     if (array_key_exists('messages', $conf) && is_array($conf['messages'])) {
       foreach ($conf['messages'] as $error => $message) {
-        $error = constant('self::MAX_' . strtoupper($error));
-        $this->_messageTemplates[$error] = wire('sanitizer')->text($message);
+        if (defined('self::MAX_' . strtoupper($error)) && !empty($message)) {
+          $error = constant('self::MAX_' . strtoupper($error));
+          $this->_messageTemplates[$error] = wire('sanitizer')->text($message);
+        }
       }
     }
   }
