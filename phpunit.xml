@@ -3,9 +3,18 @@
   bootstrap="./tests/bootstrap.php"
   printerFile="./vendor/whatthejeff/nyancat-phpunit-resultprinter/src/NyanCat/PHPUnit/ResultPrinter.php"
   printerClass="NyanCat\PHPunit\ResultPrinter">
+
   <testsuites>
     <testsuite name="Val">
       <directory>tests</directory>
     </testsuite>
   </testsuites>
+
+  <logging>
+    <log type="coverage-html" target="./log/codecoverage" charset="UTF-8"
+        yui="true" highlight="true"
+        lowUpperBound="35" highLowerBound="70"/>
+    <log type="testdox-html" target="./log/testdox.html" />
+  </logging>
+
 </phpunit>
