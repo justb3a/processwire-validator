@@ -3,6 +3,7 @@
 - [Examples](examples.md)
 - [➻ Available Validators](validators.md)
 - [Error Messages](messages.md)
+- [phpunit Testing](phpunit.md)
 
 
 # Validation for ProcessWire: Validators

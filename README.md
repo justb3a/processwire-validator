@@ -8,3 +8,4 @@ This module provides a set of useful validation methods.
 - [Examples](doc/examples.md)
 - [Available Validators](doc/validators.md)
 - [Error Messages](doc/messages.md)
+- [phpunit Testing](doc/phpunit.md)
