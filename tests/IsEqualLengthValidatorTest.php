@@ -1,7 +1,6 @@
 <?php
 
 namespace Kfi\Validator\Tests;
-
 use Kfi\Validator\IsEqualLengthValidator;
 
 class IsEqualLengthValidatorTest extends \PHPUnit_Framework_TestCase {
@@ -26,15 +25,16 @@ class IsEqualLengthValidatorTest extends \PHPUnit_Framework_TestCase {
 
   public function testIsNotEqualLength() {
     $a = new IsEqualLengthValidator('string', array('equal' => 8));
-    $this->assertFalse($a->isValid(), "Value should be equal to 8.");
-    $this->assertNotEmpty($a->getMessages()[0]);
-
     $b = new IsEqualLengthValidator('string');
-    $this->assertFalse($b->isValid(), "Value should be equal to 8.");
-
     $c = new IsEqualLengthValidator('string', array('equal' => 'string'));
-    $this->assertFalse($c->isValid(), "Value should be equal to 8.");
+    $d = new IsEqualLengthValidator('string', array('equal' => 'string', 'messages' => array('length' => 'This is another error message.')));
+
+    foreach (range('a', 'd') as $validator) {
+      $this->assertFalse(${$validator}->isValid(), "Value should be equal to 8.");
+      $this->assertNotEmpty(${$validator}->getMessages()[0]);
+      $this->assertEquals(IsEqualLengthValidator::IS_NOT_EQUAL_LENGTH, ${$validator}->getErrors()[0], 'Error message is missing.');
+    }
+
   }
 
 }
-

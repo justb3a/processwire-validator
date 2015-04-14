@@ -31,14 +31,15 @@ class IsEmailValidatorTest extends \PHPUnit_Framework_TestCase {
     $b = new IsEmailValidator('testfoocom');
     $c = new IsEmailValidator('test@foocom');
     $d = new IsEmailValidator('testfoo.com');
+    $e = new IsEmailValidator('testfoo.com', array('messages' => array('invalid' => 'This is another error message.')));
 
-    $this->assertFalse($a->isValid());
-    $this->assertNotEmpty($a->getMessages()[0]);
-    $this->assertEquals(IsEmailValidator::EMAIL_IS_INVALID, $a->getErrors()[0]);
+    foreach (range('a', 'e') as $validator) $this->assertFalse(${$validator}->isValid(), 'Email address should be invalid.');
 
-    $this->assertFalse($b->isValid());
-    $this->assertFalse($c->isValid());
-    $this->assertFalse($d->isValid());
+    $this->assertNotEmpty($a->getMessages()[0], 'Error message is missing.');
+
+    foreach (array('a', 'e') as $validator) {
+      $this->assertEquals(IsEmailValidator::EMAIL_IS_INVALID, ${$validator}->getErrors()[0], 'Error message is missing.');
+    }
   }
 
 }

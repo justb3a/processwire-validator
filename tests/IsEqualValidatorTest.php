@@ -1,7 +1,6 @@
 <?php
 
 namespace Kfi\Validator\Tests;
-
 use Kfi\Validator\IsEqualValidator;
 
 class IsEqualValidatorTest extends \PHPUnit_Framework_TestCase {
@@ -53,9 +52,14 @@ class IsEqualValidatorTest extends \PHPUnit_Framework_TestCase {
 
   public function testIsNotEqual() {
     wire('input')->post->pass_confirm = 'drowssap';
-    $validator = new IsEqualValidator('drowsap', array('equal' => 'pass_confirm'));
-    $this->assertFalse($validator->isValid(), "Value should be equal to pass_confirm.");
-    $this->assertNotEmpty($validator->getMessages()[0]);
+    $a = new IsEqualValidator('drowsap', array('equal' => 'pass_confirm'));
+    $b = new IsEqualValidator('drowsap', array('equal' => 'pass_confirm', 'messages' => array('equal' => 'This is another error message.')));
+
+    foreach (range('a', 'b') as $validator) {
+      $this->assertFalse(${$validator}->isValid(), "Value should be equal to pass_confirm.");
+      $this->assertNotEmpty(${$validator}->getMessages()[0]);
+      $this->assertEquals(IsEqualValidator::IS_NOT_EQUAL, ${$validator}->getErrors()[0], 'Error message is missing.');
+    }
   }
 
 }
