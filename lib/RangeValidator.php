@@ -1,6 +1,7 @@
 <?php
 
 namespace Kfi\Validator;
+use WireException;
 
 class RangeValidator extends AbstractValidator implements ValidatorInterface {
 
@@ -11,13 +12,19 @@ class RangeValidator extends AbstractValidator implements ValidatorInterface {
   );
 
   public function validate($value, $conf = array()) {
+    if (!is_array($conf)) throw new WireException('Config must be of type array but is of type ' . gettype($conf) . '.');
+
+    $this->setValue($value);
+
     // get min value
-    $cond = is_array($conf) && array_key_exists('min', $conf) && is_numeric($conf['min']);
+    $cond = array_key_exists('min', $conf) && is_numeric($conf['min']);
     $min = $cond ? (int)$conf['min'] : 0;
     $this->setMin($min);
 
-    $cond = is_array($conf) && array_key_exists('max', $conf) && is_numeric($conf['max']);
+    // get max value
+    $cond = array_key_exists('max', $conf) && is_numeric($conf['max']);
     $max = $cond ? (int)$conf['max'] : 10;
+    $this->setMax($max);
 
     // validate
     if (strlen($value) < $min || strlen($value) > $max) {
@@ -30,8 +37,10 @@ class RangeValidator extends AbstractValidator implements ValidatorInterface {
   private function checkOwnMessage($conf) {
     if (array_key_exists('messages', $conf) && is_array($conf['messages'])) {
       foreach ($conf['messages'] as $error => $message) {
-        $error = constant('self::OUT_OF_' . strtoupper($error));
-        $this->_messageTemplates[$error] = wire('sanitizer')->text($message);
+        if (defined('self::OUT_OF_' . strtoupper($error)) && !empty($message)) {
+          $error = constant('self::OUT_OF_' . strtoupper($error));
+          $this->_messageTemplates[$error] = wire('sanitizer')->text($message);
+        }
       }
     }
   }

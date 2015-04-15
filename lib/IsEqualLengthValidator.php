@@ -1,6 +1,7 @@
 <?php
 
 namespace Kfi\Validator;
+use WireException;
 
 class IsEqualLengthValidator extends AbstractValidator implements ValidatorInterface {
 
@@ -11,8 +12,10 @@ class IsEqualLengthValidator extends AbstractValidator implements ValidatorInter
   );
 
   public function validate($value, $conf = array()) {
+    if (!is_array($conf)) throw new WireException('Config must be of type array but is of type ' . gettype($conf) . '.');
+
     // get equal value
-    $cond = is_array($conf) && array_key_exists('equal', $conf) && is_numeric($conf['equal']);
+    $cond = array_key_exists('equal', $conf) && is_numeric($conf['equal']);
     $equal = $cond ? (int)$conf['equal'] : 0;
 
     // validate
@@ -27,8 +30,10 @@ class IsEqualLengthValidator extends AbstractValidator implements ValidatorInter
   private function checkOwnMessage($conf) {
     if (array_key_exists('messages', $conf) && is_array($conf['messages'])) {
       foreach ($conf['messages'] as $error => $message) {
-        $error = constant('self::IS_NOT_EQUAL_' . strtoupper($error));
-        $this->_messageTemplates[$error] = wire('sanitizer')->text($message);
+        if (defined('self::IS_NOT_EQUAL_' . strtoupper($error)) && !empty($message)) {
+          $error = constant('self::IS_NOT_EQUAL_' . strtoupper($error));
+          $this->_messageTemplates[$error] = wire('sanitizer')->text($message);
+        }
       }
     }
   }

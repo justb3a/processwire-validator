@@ -1,6 +1,7 @@
 <?php
 
 namespace Kfi\Validator;
+use WireException;
 
 class IsUniqueValidator extends AbstractValidator implements ValidatorInterface {
 
@@ -15,21 +16,21 @@ class IsUniqueValidator extends AbstractValidator implements ValidatorInterface 
   );
 
   public function validate($value, $conf = array()) {
-    $ident = is_array($conf) && array_key_exists('ident', $conf) ? $conf['ident'] : '';
+    if (!is_array($conf)) throw new WireException('Config must be of type array but is of type ' . gettype($conf) . '.');
+    if (!array_key_exists('ident', $conf) || empty($conf['ident'])) throw new WireException('No field to check was transferred.');
+
     $this->setValue($value);
 
-    if (!empty($ident)) {
-      $sanitize = array_key_exists('sanitize', $conf) ? $conf['sanitize'] : 'text';
-      $value = $this->sanitizeValue($sanitize, $value);
+    $sanitize = (array_key_exists('sanitize', $conf) && !empty($conf['sanitize'])) ? $conf['sanitize'] : 'text';
+    $value = $this->sanitizeValue($sanitize, $value);
 
-      // after sanitizing the value may be empty
-      // (for example: invalid email returns empty string)
-      if (!empty($value)) {
-        if (wire('users')->get("$ident=$value")->id) {
-          $this->setIsValid(false);
-          $this->addError(constant('self::IS_NOT_UNIQUE_' . strtoupper($sanitize)));
-          $this->checkOwnMessage($conf);
-        }
+    // after sanitizing the value may be empty
+    // (for example: invalid email returns empty string)
+    if (!empty($value)) {
+      if (wire('users')->get($conf['ident'] . '=' . $value)->id) {
+        $this->setIsValid(false);
+        $this->addError(constant('self::IS_NOT_UNIQUE_' . strtoupper($sanitize)));
+        $this->checkOwnMessage($conf);
       }
     }
   }
@@ -54,8 +55,10 @@ class IsUniqueValidator extends AbstractValidator implements ValidatorInterface 
   private function checkOwnMessage($conf) {
     if (array_key_exists('messages', $conf) && is_array($conf['messages'])) {
       foreach ($conf['messages'] as $error => $message) {
-        $error = constant('self::IS_NOT_UNIQUE_' . strtoupper($error));
-        $this->_messageTemplates[$error] = wire('sanitizer')->text($message);
+        if (defined('self::IS_NOT_UNIQUE_' . strtoupper($error)) && !empty($message)) {
+          $error = constant('self::IS_NOT_UNIQUE_' . strtoupper($error));
+          $this->_messageTemplates[$error] = wire('sanitizer')->text($message);
+        }
       }
     }
   }
