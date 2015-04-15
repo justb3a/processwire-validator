@@ -1,8 +1,9 @@
 #### Navigation
 - [Installation](installation.md)
-- [Examples](examples.md)
+- [Usage](examples.md)
 - [Available Validators](validators.md)
 - [➻ Error Messages](messages.md)
+- [phpunit Testing](phpunit.md)
 
 
 # Validation for ProcessWire: Error Messages
