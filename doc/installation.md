@@ -17,3 +17,8 @@ git clone https://github.com/justonestep/processwire-validator.git your/path/sit
 2. Login to ProcessWire admin and click Modules.
 3. Click "Check for new modules".
 4. Click "install" next to the new Validator module. 
+
+
+## Requirements
+
+- PHP: 5.4 or higher
