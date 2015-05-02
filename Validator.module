@@ -9,7 +9,7 @@
  * Licensed under GNU/GPL v2, see LICENSE.TXT
  *
  * @author Tabea David <td@kf-interactive.com>
- * @version 0.0.2
+ * @version 0.0.3
  * @copyright Copyright (c) 2015 KF Interactive, www.kf-interactive.com, <info@kf-interactive.com>
  * @see https://github.com/justonestep/processwire-validator
  * @see http://www.processwire.com
@@ -30,7 +30,7 @@ class Validator extends WireData implements Module {
     return array(
       'title' => 'Validator',
       'summary' => 'Provides a set of useful validation methods',
-      'version' => 2,
+      'version' => 3,
       'author' => 'Tabea David | td@kf-interactive.com',
       'href' => 'https://github.com/justonestep/processwire-validator',
       'icon' => 'check-circle-o',
