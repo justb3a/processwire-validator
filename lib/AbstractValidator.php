@@ -4,7 +4,7 @@ namespace Kfi\Validator;
 use WireException;
 
 abstract class AbstractValidator {
-  private $errors = [];
+  private $errors = array();
   private $isValid = true;
   private $value = '';
   private $min = 0;

@@ -29,7 +29,8 @@ class IsEmptyValidatorTest extends \PHPUnit_Framework_TestCase {
 
     foreach (range('a', 'b') as $validator) {
       $this->assertFalse(${$validator}->isValid(), "Value should be empty.");
-      $this->assertEquals(IsEmptyValidator::IS_EMPTY, ${$validator}->getErrors()[0], 'Error message is missing.');
+      $err = ${$validator}->getErrors();
+      $this->assertEquals(IsEmptyValidator::IS_EMPTY, $err[0], 'Error message is missing.');
     }
   }
 

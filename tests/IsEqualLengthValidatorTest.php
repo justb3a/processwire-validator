@@ -31,8 +31,10 @@ class IsEqualLengthValidatorTest extends \PHPUnit_Framework_TestCase {
 
     foreach (range('a', 'd') as $validator) {
       $this->assertFalse(${$validator}->isValid(), "Value should be equal to 8.");
-      $this->assertNotEmpty(${$validator}->getMessages()[0]);
-      $this->assertEquals(IsEqualLengthValidator::IS_NOT_EQUAL_LENGTH, ${$validator}->getErrors()[0], 'Error message is missing.');
+      $message = ${$validator}->getMessages();
+      $err = ${$validator}->getErrors();
+      $this->assertNotEmpty($message[0]);
+      $this->assertEquals(IsEqualLengthValidator::IS_NOT_EQUAL_LENGTH, $err[0], 'Error message is missing.');
     }
 
   }

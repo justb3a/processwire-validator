@@ -33,8 +33,10 @@ class MinLengthValidatorTest extends \PHPUnit_Framework_TestCase {
     $this->assertFalse($a->isValid(), "Value must be at minimum 12 characters.");
     $this->assertFalse($b->isValid(), "Value must be at minimum 12 characters.");
 
-    $this->assertEquals(MinLengthValidator::MIN_LENGTH, $a->getErrors()[0], 'Error message is missing.');
-    $this->assertEquals(MinLengthValidator::MIN_LENGTH, $b->getErrors()[0], 'Error message is missing.');
+    $errA = $a->getErrors();
+    $errB = $b->getErrors();
+    $this->assertEquals(MinLengthValidator::MIN_LENGTH, $errA[0], 'Error message is missing.');
+    $this->assertEquals(MinLengthValidator::MIN_LENGTH, $errB[0], 'Error message is missing.');
   }
 
 }

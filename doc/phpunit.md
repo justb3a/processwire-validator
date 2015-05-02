@@ -8,6 +8,12 @@
 
 # Validation for ProcessWire: phpunit
 
+## Run Composer install
+
+```
+composer install
+```
+
 ## Quick Test
 
 - no logging
