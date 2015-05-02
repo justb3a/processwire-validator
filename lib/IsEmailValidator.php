@@ -14,7 +14,8 @@ class IsEmailValidator extends AbstractValidator implements ValidatorInterface {
   public function validate($value, $conf = array()) {
     if (!is_array($conf)) throw new WireException('Config must be of type array but is of type ' . gettype($conf) . '.');
 
-    if (empty(wire('sanitizer')->email($value))) {
+    $email = wire('sanitizer')->email($value);
+    if (empty($email)) {
       $this->setValue($value);
       $this->setIsValid(false);
       $this->addError(self::EMAIL_IS_INVALID);

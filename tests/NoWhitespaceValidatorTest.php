@@ -29,7 +29,8 @@ class NoWhitespaceValidatorTest extends \PHPUnit_Framework_TestCase {
 
     foreach (range('a', 'b') as $validator) {
       $this->assertFalse(${$validator}->isValid(), "Value contains whitespace.");
-      $this->assertEquals(NoWhitespaceValidator::NO_WHITESPACE, ${$validator}->getErrors()[0], 'Error message is missing.');
+      $err = ${$validator}->getErrors();
+      $this->assertEquals(NoWhitespaceValidator::NO_WHITESPACE, $err[0], 'Error message is missing.');
     }
   }
 
