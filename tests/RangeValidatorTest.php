@@ -54,9 +54,11 @@ class RangeValidatorTest extends \PHPUnit_Framework_TestCase {
         Is: ' . strlen($validator->getValue())
       );
 
+      $err = $validator->getErrors();
+
       $this->assertEquals(
         RangeValidator::OUT_OF_RANGE,
-        $validator->getErrors()[0],
+        $err[0],
         'Error message is missing.'
       );
     }

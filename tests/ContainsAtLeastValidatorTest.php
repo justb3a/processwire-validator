@@ -69,26 +69,32 @@ class ContainsAtLeastValidatorTest extends \PHPUnit_Framework_TestCase {
 
     foreach (range('a', 'i') as $validator) $this->assertFalse(${$validator}->isValid(), 'Value is not allowed to contain any uppercase, digit, letter and specialsign');
 
-    $this->assertEquals(ContainsAtLeastValidator::MUST_CONTAIN_DIGIT, $a->getErrors()[0], 'Error message is missing.');
-    $this->assertEquals(ContainsAtLeastValidator::MUST_CONTAIN_LETTER, $b->getErrors()[0], 'Error message is missing.');
-    $this->assertEquals(ContainsAtLeastValidator::MUST_CONTAIN_SPECIALSIGN, $c->getErrors()[0], 'Error message is missing.');
-    $this->assertEquals(ContainsAtLeastValidator::MUST_CONTAIN_UPPERCASE, $d->getErrors()[0], 'Error message is missing.');
+    $errs = array();
+    foreach (range('a', 'i') as $letter) {
+      $err = ${$letter}->getErrors();
+      $errs[$letter] = $err[0];
+    }
 
-    $this->assertEquals(ContainsAtLeastValidator::MUST_CONTAIN_DIGIT, $e->getErrors()[0], 'Error message is missing.');
-    $this->assertEquals(ContainsAtLeastValidator::MUST_CONTAIN_LETTER, $f->getErrors()[0], 'Error message is missing.');
-    $this->assertEquals(ContainsAtLeastValidator::MUST_CONTAIN_SPECIALSIGN, $g->getErrors()[0], 'Error message is missing.');
-    $this->assertEquals(ContainsAtLeastValidator::MUST_CONTAIN_UPPERCASE, $h->getErrors()[0], 'Error message is missing.');
+    $this->assertEquals(ContainsAtLeastValidator::MUST_CONTAIN_DIGIT, $errs['a'], 'Error message is missing.');
+    $this->assertEquals(ContainsAtLeastValidator::MUST_CONTAIN_LETTER, $errs['b'], 'Error message is missing.');
+    $this->assertEquals(ContainsAtLeastValidator::MUST_CONTAIN_SPECIALSIGN, $errs['c'], 'Error message is missing.');
+    $this->assertEquals(ContainsAtLeastValidator::MUST_CONTAIN_UPPERCASE, $errs['d'], 'Error message is missing.');
+
+    $this->assertEquals(ContainsAtLeastValidator::MUST_CONTAIN_DIGIT, $errs['e'], 'Error message is missing.');
+    $this->assertEquals(ContainsAtLeastValidator::MUST_CONTAIN_LETTER, $errs['f'], 'Error message is missing.');
+    $this->assertEquals(ContainsAtLeastValidator::MUST_CONTAIN_SPECIALSIGN, $errs['g'], 'Error message is missing.');
+    $this->assertEquals(ContainsAtLeastValidator::MUST_CONTAIN_UPPERCASE, $errs['h'], 'Error message is missing.');
 
     foreach ($i->getErrors() as $error) {
       switch($error) {
         case 'uppercase':
-          $this->assertEquals(ContainsAtLeastValidator::MUST_CONTAIN_UPPERCASE, $i->getErrors()[0], 'Error message is missing.');
+          $this->assertEquals(ContainsAtLeastValidator::MUST_CONTAIN_UPPERCASE, $errs['i'], 'Error message is missing.');
           break;
         case 'digit':
-          $this->assertEquals(ContainsAtLeastValidator::MUST_CONTAIN_DIGIT, $i->getErrors()[0], 'Error message is missing.');
+          $this->assertEquals(ContainsAtLeastValidator::MUST_CONTAIN_DIGIT, $errs['i'], 'Error message is missing.');
           break;
         case 'specialsign':
-          $this->assertEquals(ContainsAtLeastValidator::MUST_CONTAIN_SPECIALSIGN, $i->getErrors()[0], 'Error message is missing.');
+          $this->assertEquals(ContainsAtLeastValidator::MUST_CONTAIN_SPECIALSIGN, $errs['i'], 'Error message is missing.');
           break;
       }
     }

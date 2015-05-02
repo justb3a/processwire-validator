@@ -33,7 +33,8 @@ class MaxLengthValidatorTest extends \PHPUnit_Framework_TestCase {
 
     foreach (range('a', 'c') as $validator) {
       $this->assertFalse(${$validator}->isValid(), 'Value must be at maximum ' . ${$validator}->getMax(). ' characters.');
-      $this->assertEquals(MaxLengthValidator::MAX_LENGTH, ${$validator}->getErrors()[0], 'Error message is missing.');
+      $err = ${$validator}->getErrors();
+      $this->assertEquals(MaxLengthValidator::MAX_LENGTH, $err[0], 'Error message is missing.');
     }
   }
 

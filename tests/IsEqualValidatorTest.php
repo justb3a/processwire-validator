@@ -57,8 +57,10 @@ class IsEqualValidatorTest extends \PHPUnit_Framework_TestCase {
 
     foreach (range('a', 'b') as $validator) {
       $this->assertFalse(${$validator}->isValid(), "Value should be equal to pass_confirm.");
-      $this->assertNotEmpty(${$validator}->getMessages()[0]);
-      $this->assertEquals(IsEqualValidator::IS_NOT_EQUAL, ${$validator}->getErrors()[0], 'Error message is missing.');
+      $message = ${$validator}->getMessages();
+      $err = ${$validator}->getErrors();
+      $this->assertNotEmpty($message[0]);
+      $this->assertEquals(IsEqualValidator::IS_NOT_EQUAL, $err[0], 'Error message is missing.');
     }
   }
 

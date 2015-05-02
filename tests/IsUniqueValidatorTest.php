@@ -52,17 +52,23 @@ class IsUniqueValidatorTest extends \PHPUnit_Framework_TestCase {
     $d = new IsUniqueValidator($user->name, array('ident' => 'name', 'sanitize' => 'text', 'messages' => array('text' => 'This is another error message.')));
     $e = new IsUniqueValidator($user->name, array('ident' => 'name', 'sanitize' => 'text', 'messages' => array('notexisting' => 'This is another error message.')));
 
-    $this->assertFalse($a->isValid(), 'This email should not be unique.');
+    $this->assertFalse($a->isValid(), 'This email ' . $user->email . ' should not be unique.');
     $this->assertFalse($b->isValid(), 'This username should not be unique.');
     $this->assertFalse($c->isValid(), 'This string should not be unique.');
     $this->assertFalse($d->isValid(), 'This string should not be unique.');
     $this->assertFalse($e->isValid(), 'This string should not be unique.');
 
-    $this->assertEquals(IsUniqueValidator::IS_NOT_UNIQUE_EMAIL, $a->getErrors()[0], 'Error message is missing.');
-    $this->assertEquals(IsUniqueValidator::IS_NOT_UNIQUE_USERNAME, $b->getErrors()[0], 'Error message is missing.');
-    $this->assertEquals(IsUniqueValidator::IS_NOT_UNIQUE_TEXT, $c->getErrors()[0], 'Error message is missing.');
-    $this->assertEquals(IsUniqueValidator::IS_NOT_UNIQUE_TEXT, $d->getErrors()[0], 'Error message is missing.');
-    $this->assertEquals(IsUniqueValidator::IS_NOT_UNIQUE_TEXT, $e->getErrors()[0], 'Error message is missing.');
+    $errs = array();
+    foreach (range('a', 'e') as $letter) {
+      $err = ${$letter}->getErrors();
+      $errs[$letter] = $err[0];
+    }
+
+    $this->assertEquals(IsUniqueValidator::IS_NOT_UNIQUE_EMAIL, $errs['a'], 'Error message is missing.');
+    $this->assertEquals(IsUniqueValidator::IS_NOT_UNIQUE_USERNAME, $errs['b'], 'Error message is missing.');
+    $this->assertEquals(IsUniqueValidator::IS_NOT_UNIQUE_TEXT, $errs['c'], 'Error message is missing.');
+    $this->assertEquals(IsUniqueValidator::IS_NOT_UNIQUE_TEXT, $errs['d'], 'Error message is missing.');
+    $this->assertEquals(IsUniqueValidator::IS_NOT_UNIQUE_TEXT, $errs['e'], 'Error message is missing.');
   }
 
 }
